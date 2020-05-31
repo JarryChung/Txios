@@ -5,7 +5,7 @@
   "keywords": [],
   "main": "dist/txios.umd.js",
   "module": "dist/txios.es5.js",
-  "typings": "dist/types/txios.d.ts",
+  "typings": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
