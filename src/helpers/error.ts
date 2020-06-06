@@ -37,7 +37,7 @@ export class TxiosError extends Error {
  * @param message 错误信息
  * @param config 请求配置
  * @param code 状态码
- * @param request 请求
+ * @param request 请求, 即 XHR 实例
  * @param response 响应
  */
 export function createError(

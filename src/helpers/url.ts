@@ -23,7 +23,7 @@ function encode(val: string): string {
  * @param url URL
  * @param params params 选项
  */
-export default function buildURL(url: string, params?: any): string {
+export function buildURL(url: string, params?: any): string {
   if (!params) {
     return url
   }
