@@ -5,6 +5,11 @@
 export type Method = 'head' | 'options' | 'get' | 'delete' | 'put' | 'post' | 'patch'
 
 export interface Txios {
+  interceptors: {
+    request: InterceptorManager<TxiosRequestConfig>
+    response: InterceptorManager<TxiosResponse>
+  }
+
   request<T = any>(config: TxiosRequestConfig): TxiosResponse<T>
 
   get<T = any>(url: string, config?: TxiosRequestConfig): TxiosPromise<T>
@@ -49,4 +54,22 @@ export interface TxiosError extends Error {
   code?: string | null
   request?: any
   response?: TxiosResponse
+}
+
+export interface InterceptorManager<T> {
+  use(resolved: ResolvedFn<T>, rejected?: RejectedFn): number
+  eject(id: number): void
+}
+
+export interface ResolvedFn<T> {
+  (val: T): T | Promise<T>
+}
+
+export interface RejectedFn {
+  (error: any): any
+}
+
+export interface PromiseChain<T> {
+  resolved: ResolvedFn<T> | ((config: TxiosRequestConfig) => TxiosPromise)
+  rejected?: RejectedFn
 }

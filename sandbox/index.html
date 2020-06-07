@@ -84,6 +84,12 @@
       <p class="intro">测试错误处理</p>
       <p class="content">在控制台能看到三种错误：url 错误 / 状态码错误(50%概率发生) / 超时错误</p>
     </div>
+
+    <div class="box">
+      <button id="interceptor_post"" class="btn">打开控制台,点击这里查看效果</button>
+      <p class="intro">测试拦截器</p>
+      <p class="content">打开开发者工具-network，可以看到发出请求中 headers.test 变成了 headers000/333/222/111；在 console 中查看响应数据 data.data.good = data000/111/333 </p>
+    </div>
   </div>
 
   <script src="/__build__/client.js"></script>

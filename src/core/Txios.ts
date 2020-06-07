@@ -2,10 +2,25 @@
  * Txios 类文件
  */
 
-import { TxiosPromise, TxiosRequestConfig, Method } from '../types'
+import { TxiosPromise, TxiosRequestConfig, Method, TxiosResponse, PromiseChain } from '../types'
 import dispatchRequest from './dispatchRequest'
+import InterceptorManager from './InterceptorManager'
+
+interface Interceptors {
+  request: InterceptorManager<TxiosRequestConfig>
+  response: InterceptorManager<TxiosResponse>
+}
 
 export default class Txios {
+  interceptors: Interceptors
+
+  constructor() {
+    this.interceptors = {
+      request: new InterceptorManager<TxiosRequestConfig>(),
+      response: new InterceptorManager<TxiosResponse>(),
+    }
+  }
+
   request(url: any, config?: any): TxiosPromise {
     if (typeof url === 'string') {
       if (!config) {
@@ -15,7 +30,30 @@ export default class Txios {
     } else {
       config = url
     }
-    return dispatchRequest(config)
+
+    const promiseChain: Array<PromiseChain<any>> = [
+      {
+        resolved: dispatchRequest,
+        rejected: undefined,
+      },
+    ]
+
+    this.interceptors.request.forEach((interceptor) => {
+      promiseChain.unshift(interceptor)
+    })
+
+    this.interceptors.response.forEach((interceptor) => {
+      promiseChain.push(interceptor)
+    })
+
+    let promise = Promise.resolve(config)
+
+    while (promiseChain.length) {
+      const { resolved, rejected } = promiseChain.shift()!
+      promise = promise.then(resolved, rejected)
+    }
+
+    return promise
   }
 
   get(url: string, config?: TxiosRequestConfig): TxiosPromise {

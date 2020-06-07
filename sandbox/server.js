@@ -29,8 +29,10 @@ app.use(route.get('/simple_path_get', simplePathGet))
 app.use(route.post('/simple_data_post', simpleDataPost))
 app.use(route.post('/simple_response_type_post', simpleResponseTypePost))
 
-app.use(route.get('/error_get_with_timeout', ErrorGetWithTimeout))
-app.use(route.get('/error_get_with_500', ErrorGetWith500))
+app.use(route.get('/error_get_with_timeout', errorGetWithTimeout))
+app.use(route.get('/error_get_with_500', errorGetWith500))
+
+app.use(route.post('/interceptor_post', interceptorPost))
 
 const port = process.env.PORT || 8899
 app.listen(port)
@@ -54,7 +56,7 @@ function simpleResponseTypePost (ctx) {
   ctx.response.body = { data: ctx.request.body }
 }
 
-async function ErrorGetWithTimeout (ctx) {
+async function errorGetWithTimeout (ctx) {
   await new Promise((resolve) => {
     setTimeout(() => {
       ctx.response.body = { good: 'good news' }
@@ -63,7 +65,7 @@ async function ErrorGetWithTimeout (ctx) {
   })
 }
 
-function ErrorGetWith500 (ctx) {
+function errorGetWith500 (ctx) {
   if (Math.random() > 0.5) {
     ctx.response.body = { good: 'good news' }
   } else {
@@ -71,3 +73,6 @@ function ErrorGetWith500 (ctx) {
   }
 }
 
+function interceptorPost (ctx) {
+  ctx.response.body = { data: ctx.request.body }
+}

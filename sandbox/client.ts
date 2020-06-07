@@ -5,7 +5,8 @@ const map = {
   simple_path_get: simpleHashGet,
   simple_data_post: simpleDataPost,
   simple_response_type_post: simpleResponseTypePost,
-  error_get: ErrorGet
+  error_get: errorGet,
+  interceptor_post: interceptorPost
 }
 
 Object.keys(map).forEach(el => {
@@ -50,7 +51,7 @@ function simpleResponseTypePost () {
   })
 }
 
-function ErrorGet () {
+function errorGet () {
   txios.get('/error_get_no_this_path')
     .then(res => { console.log(res) })
     .catch(err => { console.log('url error', err) })
@@ -60,4 +61,40 @@ function ErrorGet () {
   txios.get('/error_get_with_500')
     .then(res => { console.log(res) })
     .catch(err => { console.log('maybe 500', err) })
+}
+
+function interceptorPost () {
+  txios.interceptors.request.use(config => {
+    config.headers.test += '/111'
+    return config
+  })
+  txios.interceptors.request.use(config => {
+    config.headers.test += '/222'
+    return config
+  })
+  txios.interceptors.request.use(config => {
+    config.headers.test += '/333'
+    return config
+  })
+  txios.interceptors.response.use(res => {
+    res.data.data.good += '/111'
+    return res
+  })
+  const id = txios.interceptors.response.use(res => {
+    res.data.data.good += '/222'
+    return res
+  })
+  txios.interceptors.response.use(res => {
+    res.data.data.good += '/333'
+    return res
+  })
+  txios.interceptors.response.eject(id)
+  txios({
+    url: '/interceptor_post',
+    method: 'post',
+    headers: { test: 'headers000' },
+    data: { good: 'data000' }
+  }).then(res => {
+    console.log(res)
+  })
 }
