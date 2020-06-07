@@ -3,10 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Jarry Chung">
   <title>Txios Sandbox</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    body {
+      text-align: center;
+      font-size: 12px;
+      background: #EEE;
+    }
+    .title {
+      margin: 12px 0;
+      font-size: 36px;
+    }
+    .wrap {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: center;
+      align-content: flex-start;
+    }
+    .box {
+      border-radius: 5px;
+      margin: 12px;
+      padding: 12px;
+      text-align: left;
+      width: 400px;
+      height: 220px;
+      border: 1px #CCC solid;
+      background: white;
+    }
+    .box > * {
+      margin-bottom: 8px;
+    }
+    .btn {
+      padding: 3px 8px;
+      cursor: pointer;
+    }
+    .intro {
+      color: #666;
+      font-size: 12px;
+    }
+    .content {
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Txios Sandbox</h1>
+  <h1 class="title">Txios Sandbox</h1>
+
+  <div class="wrap">
+    <div class="box">
+      <button id="test" class="btn">打开控制台,点击这里查看效果</button>
+      <p class="intro">打算的撒</p>
+      <p class="content">dasdas算打d</p>
+    </div>
+
+    <div class="box">
+      <button id="test1" class="btn">打开控制台,点击这里查看效果</button>
+      <p class="intro">打算的撒</p>
+      <p class="content">dasdas算打d</p>
+    </div>
+
+    <div class="box">
+      <button id="test2" class="btn">打开控制台,点击这里查看效果</button>
+      <p class="intro">打算的撒</p>
+      <p class="content">dasdas算打d</p>
+    </div>
+
+    <div class="box">
+      <button id="test3" class="btn">打开控制台,点击这里查看效果</button>
+      <p class="intro">打算的撒</p>
+      <p class="content">dasdas算打d</p>
+    </div>
+
+    <div class="box">
+      <button id="test4" class="btn">打开控制台,点击这里查看效果</button>
+      <p class="intro">打算的撒</p>
+      <p class="content">dasdas算打d</p>
+    </div>
+  </div>
+
   <script src="/__build__/client.js"></script>
 </body>
 </html>
