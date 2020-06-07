@@ -19,8 +19,10 @@ export default function dispatchRequest(config: TxiosRequestConfig): TxiosPromis
 
 function processConfig(config: TxiosRequestConfig): void {
   config.url = transformURL(config)
-  config.data = transformRequestData(config)
+  // 必须先处理 headers 再处理 data
+  // 因为 headers 的内容会根据 data 的类型来确定，并且处理 data 时可能会 data 的类型
   config.headers = transformHeaders(config)
+  config.data = transformRequestData(config)
 }
 
 // 处理 URL，主要是将 params 序列化为字符串并添加到 URL 上
@@ -42,5 +44,6 @@ function transformRequestData(config: TxiosRequestConfig): any {
 
 // 处理响应数据
 function transformResponseData(response: TxiosResponse): TxiosResponse {
-  return transformResponse(response.data)
+  response.data = transformResponse(response.data)
+  return response
 }
