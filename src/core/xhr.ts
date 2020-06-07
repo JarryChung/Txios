@@ -9,7 +9,7 @@ import { parseHeaders } from '../helpers/headers'
 export default function xhr(config: TxiosRequestConfig): TxiosPromise {
   return new Promise((resolve, reject) => {
     // 从用户传递的 config 中解构数据
-    const { url, method, data, headers, timeout, responsetype } = config
+    const { url, method = 'get', data = null, headers, timeout, responsetype } = config
     // 创建 XHR 实例(每一个请求都会创建一个 XHR 实例)
     const request = new XMLHttpRequest()
 
@@ -43,7 +43,7 @@ export default function xhr(config: TxiosRequestConfig): TxiosPromise {
        * 3	LOADING	下载中； responseText 属性已经包含部分数据。
        * 4	DONE	下载操作已完成。
        */
-      if (request.readyState === 4) {
+      if (request.readyState !== 4) {
         return
       }
 

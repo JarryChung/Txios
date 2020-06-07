@@ -59,7 +59,7 @@ export function parseHeaders(headers: string): any {
   headers.split('\n').forEach((line) => {
     const index = line.indexOf(':')
     const key = line.substr(0, index).toLowerCase()
-    let val = line.substring(index)
+    let val = line.substring(index + 1)
     if (!key) {
       return
     }
