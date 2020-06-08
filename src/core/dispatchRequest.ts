@@ -9,6 +9,7 @@ import { buildURL } from '../helpers/url'
 import { parseRequestHeaders, flattenHeaders } from '../helpers/headers'
 import { transformRequest, transformResponse } from '../helpers/data'
 import xhr from './xhr'
+import transform from './transform'
 
 export default function dispatchRequest(config: TxiosRequestConfig): TxiosPromise {
   processConfig(config)
@@ -19,10 +20,7 @@ export default function dispatchRequest(config: TxiosRequestConfig): TxiosPromis
 
 function processConfig(config: TxiosRequestConfig): void {
   config.url = transformURL(config)
-  // 必须先处理 headers 再处理 data
-  // 因为 headers 的内容会根据 data 的类型来确定，并且处理 data 时可能会 data 的类型
-  config.headers = transformHeaders(config)
-  config.data = transformRequestData(config)
+  config.data = transform(config.data, config.headers, config.transformRequest)
   config.headers = flattenHeaders(config.headers, config.method!)
 }
 
@@ -32,19 +30,8 @@ function transformURL(config: TxiosRequestConfig): string {
   return buildURL(url!, params)
 }
 
-// 处理请求 Headers
-function transformHeaders(config: TxiosRequestConfig): any {
-  const { headers = {}, data } = config
-  return parseRequestHeaders(headers, data)
-}
-
-// 处理请求数据
-function transformRequestData(config: TxiosRequestConfig): any {
-  return transformRequest(config.data)
-}
-
 // 处理响应数据
 function transformResponseData(response: TxiosResponse): TxiosResponse {
-  response.data = transformResponse(response.data)
+  response.data = transform(response.data, response.headers, response.config.transformResponse)
   return response
 }

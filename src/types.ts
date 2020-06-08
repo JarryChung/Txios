@@ -37,6 +37,9 @@ export interface TxiosRequestConfig {
   headers?: any
   responsetype?: XMLHttpRequestResponseType
 
+  transformRequest?: TxiosTransformer | TxiosTransformer[]
+  transformResponse?: TxiosTransformer | TxiosTransformer[]
+
   [propName: string]: any
 }
 
@@ -75,4 +78,8 @@ export interface RejectedFn {
 export interface PromiseChain<T> {
   resolved: ResolvedFn<T> | ((config: TxiosRequestConfig) => TxiosPromise)
   rejected?: RejectedFn
+}
+
+export interface TxiosTransformer {
+  (data: any, headers?: any): any
 }
