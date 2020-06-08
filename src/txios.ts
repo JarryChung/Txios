@@ -7,6 +7,8 @@ import Txios from './core/Txios'
 import { extend } from './utils'
 import defaults from './defaults'
 import mergeConfig from './core/mergeConfig'
+import CancelToken from './cancel/CancelToken'
+import Cancel, { isCancel } from './cancel/Cancel'
 
 // 工厂模式，创建一个方法 instance，并将 Txios 实例上的属性挂载到 instance 上
 function createInstance(config: TxiosRequestConfig): TxiosStatic {
@@ -27,6 +29,11 @@ const txios = createInstance(defaults)
 txios.create = function (config?: TxiosRequestConfig): TxiosInstance {
   return createInstance(mergeConfig(defaults, config))
 }
+
+// 添加静态方法
+txios.CancelToken = CancelToken
+txios.Cancel = Cancel
+txios.isCancel = isCancel
 
 // 导出
 export default txios

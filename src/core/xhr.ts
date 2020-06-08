@@ -9,7 +9,7 @@ import { parseHeaders } from '../helpers/headers'
 export default function xhr(config: TxiosRequestConfig): TxiosPromise {
   return new Promise((resolve, reject) => {
     // 从用户传递的 config 中解构数据
-    const { url, method = 'get', data = null, headers, timeout, responsetype } = config
+    const { url, method = 'get', data = null, headers, timeout, responsetype, cancelToken } = config
     // 创建 XHR 实例(每一个请求都会创建一个 XHR 实例)
     const request = new XMLHttpRequest()
 
@@ -29,6 +29,17 @@ export default function xhr(config: TxiosRequestConfig): TxiosPromise {
         request.setRequestHeader(name, headers[name])
       }
     })
+
+    if (cancelToken) {
+      // cancelToken 是 CancelToken class 的实例
+      // 如果有 cancelToken，当该实例的 promise 为 resolved 时，取消请求
+      cancelToken.promise.then((reason) => {
+        request.abort()
+        // 返回回来后，仍然会执行到这一步
+        // 但因为 promise 状态已经变成 resolved，因此不会再 reject 出错误
+        reject(reason)
+      })
+    }
 
     // 发送数据
     request.send(data)

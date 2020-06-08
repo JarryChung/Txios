@@ -12,6 +12,7 @@ import xhr from './xhr'
 import transform from './transform'
 
 export default function dispatchRequest(config: TxiosRequestConfig): TxiosPromise {
+  throwIfCancellationRequested(config)
   processConfig(config)
   return xhr(config).then((response) => {
     return transformResponseData(response)
@@ -34,4 +35,11 @@ function transformURL(config: TxiosRequestConfig): string {
 function transformResponseData(response: TxiosResponse): TxiosResponse {
   response.data = transform(response.data, response.headers, response.config.transformResponse)
   return response
+}
+
+// 发送请求前检查配置的 cancelToken 是否已经使用过，若已经被用过则不用法请求，直接抛异常
+function throwIfCancellationRequested(config: TxiosRequestConfig): void {
+  if (config.cancelToken) {
+    config.cancelToken.throwIfRequested()
+  }
 }
