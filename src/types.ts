@@ -28,6 +28,10 @@ export interface TxiosInstance extends Txios {
   <T = any>(url: string, config?: TxiosRequestConfig): TxiosPromise<T>
 }
 
+export interface TxiosStatic extends TxiosInstance {
+  create(config?: TxiosRequestConfig): TxiosInstance
+}
+
 export interface TxiosRequestConfig {
   url?: string
   method?: Method
