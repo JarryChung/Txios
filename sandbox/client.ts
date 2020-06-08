@@ -1,4 +1,5 @@
-import txios from '../src/index'
+import txios, { TxiosTransformer } from '../src/index'
+import qs from 'qs'
 
 const map = {
   simple_params_get: simpleParamsGet,
@@ -6,7 +7,8 @@ const map = {
   simple_data_post: simpleDataPost,
   simple_response_type_post: simpleResponseTypePost,
   error_get: errorGet,
-  interceptor_post: interceptorPost
+  interceptor_post: interceptorPost,
+  config_post: configPost
 }
 
 Object.keys(map).forEach(el => {
@@ -96,5 +98,40 @@ function interceptorPost () {
     data: { good: 'data000' }
   }).then(res => {
     console.log(res)
+  })
+}
+
+function configPost () {
+  const transformRequestList = [(function(data) {
+    return qs.stringify(data)
+  }), ...(txios.defaults.transformRequest as TxiosTransformer[])]
+  const transformResponseList = [...(txios.defaults.transformResponse as TxiosTransformer[]), function(data) {
+    if (typeof data === 'object') {
+      data.b = 2
+    }
+    return data
+  }]
+  txios.defaults.headers.common['test2'] = 'test222222'
+  txios({
+    transformRequest: transformRequestList,
+    transformResponse: transformResponseList,
+    url: '/config_post',
+    method: 'post',
+    data: { by: 'txios.create' },
+    headers: { test1: 'test111111' }
+  }).then((res) => {
+    console.log('txios.create', res)
+  })
+
+  const instance = txios.create({
+    transformRequest: transformRequestList,
+    transformResponse: transformResponseList
+  })
+  instance({
+    url: '/config_post',
+    method: 'post',
+    data: { by: 'txios' }
+  }).then((res) => {
+    console.log('txios', res)
   })
 }

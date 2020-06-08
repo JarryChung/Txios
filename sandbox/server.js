@@ -34,6 +34,8 @@ app.use(route.get('/error_get_with_500', errorGetWith500))
 
 app.use(route.post('/interceptor_post', interceptorPost))
 
+app.use(route.post('/config_post', configPost))
+
 const port = process.env.PORT || 8899
 app.listen(port)
 
@@ -74,5 +76,9 @@ function errorGetWith500 (ctx) {
 }
 
 function interceptorPost (ctx) {
+  ctx.response.body = { data: ctx.request.body }
+}
+
+function configPost (ctx) {
   ctx.response.body = { data: ctx.request.body }
 }
