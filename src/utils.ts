@@ -37,3 +37,28 @@ export function extend<T, S>(target: T, source: S): T & S {
   }
   return target as T & S
 }
+
+/**
+ * 深度合并多个对象，并以新对象的形式返回
+ * @param objs 多个对象
+ */
+export function deepMerge(...objs: any[]): any {
+  const result = Object.create(null)
+  objs.forEach((obj) => {
+    if (obj) {
+      Object.keys(obj).forEach((key) => {
+        const val = obj[key]
+        if (isPlainObject(val)) {
+          if (isPlainObject(result[key])) {
+            result[key] = deepMerge(result[key], val)
+          } else {
+            result[key] = deepMerge(val)
+          }
+        } else {
+          result[key] = val
+        }
+      })
+    }
+  })
+  return result
+}

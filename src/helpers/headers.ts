@@ -2,7 +2,8 @@
  * headers 处理相关方法
  */
 
-import { isPlainObject } from '../utils'
+import { isPlainObject, deepMerge } from '../utils'
+import { Method } from '..'
 
 /**
  * 规范化请求头字段
@@ -69,4 +70,26 @@ export function parseHeaders(headers: string): any {
     parsed[key] = val
   })
   return parsed
+}
+
+/**
+ * 处理请求头，移除额外的数据
+ * 如：headers: { conmon: { Accept: '...' }, post: { 'Content-Type': '...' } }
+ * 将被处理成：headers: { Accept: '...'， 'Content-Type': '...' }
+ * @param headers 请求头
+ * @param method 请求方式
+ */
+export function flattenHeaders(headers: any, method: Method): any {
+  if (!headers) {
+    return headers
+  }
+  headers = deepMerge(headers.common || {}, headers[method] || {}, headers)
+
+  const keysToDelete = ['delete', 'get', 'head', 'options', 'post', 'put', 'patch', 'common']
+
+  keysToDelete.forEach((key) => {
+    delete headers[key]
+  })
+
+  return headers
 }

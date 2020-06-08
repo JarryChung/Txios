@@ -5,6 +5,7 @@
 export type Method = 'head' | 'options' | 'get' | 'delete' | 'put' | 'post' | 'patch'
 
 export interface Txios {
+  defaults: TxiosRequestConfig
   interceptors: {
     request: InterceptorManager<TxiosRequestConfig>
     response: InterceptorManager<TxiosResponse>
@@ -35,6 +36,8 @@ export interface TxiosRequestConfig {
   params?: any
   headers?: any
   responsetype?: XMLHttpRequestResponseType
+
+  [propName: string]: any
 }
 
 export interface TxiosResponse<T = any> {

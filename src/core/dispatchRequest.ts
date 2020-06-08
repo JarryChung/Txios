@@ -6,7 +6,7 @@
 
 import { TxiosRequestConfig, TxiosPromise, TxiosResponse } from '../types'
 import { buildURL } from '../helpers/url'
-import { parseRequestHeaders } from '../helpers/headers'
+import { parseRequestHeaders, flattenHeaders } from '../helpers/headers'
 import { transformRequest, transformResponse } from '../helpers/data'
 import xhr from './xhr'
 
@@ -23,6 +23,7 @@ function processConfig(config: TxiosRequestConfig): void {
   // 因为 headers 的内容会根据 data 的类型来确定，并且处理 data 时可能会 data 的类型
   config.headers = transformHeaders(config)
   config.data = transformRequestData(config)
+  config.headers = flattenHeaders(config.headers, config.method!)
 }
 
 // 处理 URL，主要是将 params 序列化为字符串并添加到 URL 上
