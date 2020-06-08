@@ -36,6 +36,8 @@ app.use(route.post('/interceptor_post', interceptorPost))
 
 app.use(route.post('/config_post', configPost))
 
+app.use(route.get('/cancel_get', cancelGet))
+
 const port = process.env.PORT || 8899
 app.listen(port)
 
@@ -81,4 +83,13 @@ function interceptorPost (ctx) {
 
 function configPost (ctx) {
   ctx.response.body = { data: ctx.request.body }
+}
+
+async function cancelGet (ctx) {
+  await new Promise((resolve) => {
+    setTimeout(() => {
+      ctx.response.body = { good: 'good news' }
+      resolve()
+    }, 1000)
+  })
 }

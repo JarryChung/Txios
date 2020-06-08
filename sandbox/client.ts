@@ -1,4 +1,4 @@
-import txios, { TxiosTransformer } from '../src/index'
+import txios, { TxiosTransformer, Canceler } from '../src/index'
 import qs from 'qs'
 
 const map = {
@@ -8,7 +8,8 @@ const map = {
   simple_response_type_post: simpleResponseTypePost,
   error_get: errorGet,
   interceptor_post: interceptorPost,
-  config_post: configPost
+  config_post: configPost,
+  cancel_get: cancelGet
 }
 
 Object.keys(map).forEach(el => {
@@ -134,4 +135,43 @@ function configPost () {
   }).then((res) => {
     console.log('txios', res)
   })
+}
+
+function cancelGet () {
+  const CancelToken = txios.CancelToken
+  const source = CancelToken.source()
+
+  txios.get('/cancel_get', {
+    cancelToken: source.token
+  }).catch(function(e) {
+    if (txios.isCancel(e)) {
+      console.log('Request canceled', e.message)
+    }
+  })
+
+  setTimeout(() => {
+    source.cancel('Operation canceled by the user.')
+
+    txios.get('/cancel_get', { cancelToken: source.token }).catch(function(e) {
+      if (txios.isCancel(e)) {
+        console.log(e.message)
+      }
+    })
+  }, 100)
+
+  let cancel: Canceler
+
+  txios.get('/cancel_get', {
+    cancelToken: new CancelToken(c => {
+      cancel = c
+    })
+  }).catch(function(e) {
+    if (txios.isCancel(e)) {
+      console.log('Request canceled')
+    }
+  })
+
+  setTimeout(() => {
+    cancel()
+  }, 1500)
 }
