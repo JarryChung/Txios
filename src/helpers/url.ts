@@ -4,6 +4,11 @@
 
 import { isDate, isPlainObject } from '../utils'
 
+interface URLOrigin {
+  protocol: string
+  host: string
+}
+
 /**
  * 反编码部分特殊字符
  * @param val 值
@@ -16,6 +21,21 @@ function encode(val: string): string {
     .replace(/%20/g, '+')
     .replace(/%5B/gi, '[')
     .replace(/%5D/gi, ']')
+}
+
+// 利用 a 标签创建一个节点，利用该节点获得相应信息(这里是协议与 host)
+const urlParsingNode = document.createElement('a')
+// 获取当前页面 URL 的协议与 host
+const originURL = resolveURL(location.href)
+
+/**
+ * 获取该 URL 对应的协议以及 host，利用了 a 标签的特性
+ * @param url URL
+ */
+function resolveURL(url: string): URLOrigin {
+  urlParsingNode.setAttribute('href', url)
+  const { protocol, host } = urlParsingNode
+  return { protocol, host }
 }
 
 /**
@@ -71,4 +91,13 @@ export function buildURL(url: string, params?: any): string {
   }
 
   return url
+}
+
+/**
+ * 判断请求的 URL 与当前 URL 是否同域
+ * @param url 请求的 URL
+ */
+export function isURLSameOrigin(url: string): boolean {
+  const parsed = resolveURL(url)
+  return parsed.host === originURL.host && parsed.protocol === originURL.protocol
 }

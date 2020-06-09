@@ -49,6 +49,10 @@ export interface TxiosRequestConfig {
   transformResponse?: TxiosTransformer | TxiosTransformer[]
 
   cancelToken?: CancelToken
+  withCredentials?: boolean
+
+  xsrfCookieName?: string
+  xsrfHeaderName?: string
 
   [propName: string]: any
 }

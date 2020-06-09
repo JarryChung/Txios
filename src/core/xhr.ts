@@ -5,20 +5,44 @@
 import { TxiosRequestConfig, TxiosPromise, TxiosResponse } from '../types'
 import { createError } from '../helpers/error'
 import { parseHeaders } from '../helpers/headers'
+import { isURLSameOrigin } from '../helpers/url'
+import cookie from '../helpers/cookie'
 
 export default function xhr(config: TxiosRequestConfig): TxiosPromise {
   return new Promise((resolve, reject) => {
     // 从用户传递的 config 中解构数据
-    const { url, method = 'get', data = null, headers, timeout, responsetype, cancelToken } = config
+    const {
+      url,
+      method = 'get',
+      data = null,
+      headers,
+      timeout,
+      responsetype,
+      cancelToken,
+      withCredentials,
+      xsrfHeaderName,
+      xsrfCookieName,
+    } = config
     // 创建 XHR 实例(每一个请求都会创建一个 XHR 实例)
     const request = new XMLHttpRequest()
 
     // 若用户配置了这些属性，则配置到 XHR 实例中
     responsetype && (request.responseType = responsetype)
     timeout && (request.timeout = timeout)
+    withCredentials && (request.withCredentials = true)
 
     // 打开连接
     request.open(method!.toUpperCase(), url!, true)
+
+    // 当 xsrfCookieName 不为空时，且满足以下条件之一，需要带上 cookie
+    // 1. withCredentials 为 true
+    // 2. 请求的 URL 与当前页面 URL 同域
+    if ((withCredentials || isURLSameOrigin(url!)) && xsrfCookieName) {
+      const value = cookie.read(xsrfCookieName)
+      if (value && xsrfHeaderName) {
+        headers[xsrfHeaderName] = value
+      }
+    }
 
     // 设置请求头
     Object.keys(headers).forEach((name) => {
