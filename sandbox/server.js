@@ -1,5 +1,6 @@
 const Koa = require('koa')
 const path = require('path')
+const atob = require('atob')
 const webpack = require('webpack')
 const webpackDevMiddleware = require('koa-webpack-dev-middleware')
 const webpackHotMiddleware = require('koa-webpack-hot-middleware')
@@ -39,6 +40,8 @@ app.use(route.post('/config_post', configPost))
 app.use(route.get('/cancel_get', cancelGet))
 
 app.use(route.post('/progress_upload_post', progressUploadPost))
+
+app.use(route.post('/auth_post', authPost))
 
 const port = process.env.PORT || 8899
 app.listen(port)
@@ -99,4 +102,16 @@ async function cancelGet (ctx) {
 function progressUploadPost (ctx) {
   // 补充后台处理上传文件逻辑
   ctx.response.body = { result: 'upload sucess!' }
+}
+
+function authPost (ctx) {
+  const auth = ctx.request.headers.authorization
+  const [type, credentials] = auth.split(' ')
+  const [username, password] = atob(credentials).split(':')
+  if (type === 'Basic' && username === 'JarryChung' && password === '1234567890') {
+    ctx.response.body = ctx.request.body
+  } else {
+    ctx.status = 401
+    ctx.response.body = 'UnAuthorization'
+  }
 }

@@ -9,7 +9,8 @@ const map = {
   error_get: errorGet,
   interceptor_post: interceptorPost,
   config_post: configPost,
-  cancel_get: cancelGet
+  cancel_get: cancelGet,
+  auth_post: authPost
 }
 
 Object.keys(map).forEach(el => {
@@ -198,3 +199,24 @@ const getImg = () => {
 }
 const downloadEl = document.getElementById('progress_download_get')
 downloadEl!.addEventListener('click', getImg)
+
+function authPost () {
+  const data1 = { name: 'JarryChung' }
+  const data2 = { name: 'Faker' }
+  txios.post('/auth_post', data1, {
+    auth: {
+      username: 'JarryChung',
+      password: '1234567890'
+    }
+  }).then(res => {
+    console.log('auth success: ', res)
+  })
+  txios.post('/auth_post', data2, {
+    auth: {
+      username: 'Faker',
+      password: '11111'
+    }
+  }).then(res => {
+    console.log('auth fail: ', res)
+  })
+}
