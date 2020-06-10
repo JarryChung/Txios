@@ -12,7 +12,8 @@ const map = {
   cancel_get: cancelGet,
   auth_post: authPost,
   validate_status_get: validateStatusGet,
-  params_serializer_get: paramsSerializerGet
+  params_serializer_get: paramsSerializerGet,
+  baseurl_get: baseURLGet
 }
 
 Object.keys(map).forEach(el => {
@@ -257,4 +258,12 @@ function paramsSerializerGet () {
   }).then(res => {
     console.log(res)
   })
+}
+
+function baseURLGet () {
+  const instance = txios.create({
+    baseURL: 'http://img.mukewang.com/'
+  })
+  instance.get('wiki/5e7ae7af09c9e23014400452.jpg')
+  instance.get('http://img.mukewang.com/wiki/5e78e84e0933b99d32762054.jpg')
 }
