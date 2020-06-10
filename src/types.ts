@@ -55,6 +55,7 @@ export interface TxiosRequestConfig {
   xsrfHeaderName?: string
 
   auth?: TxiosAuthorization
+  validateStatus?: (status: number) => boolean
 
   onUploadProgress?: (e: ProgressEvent) => void
   onDownloadProgress?: (e: ProgressEvent) => void

@@ -34,6 +34,10 @@ const defaults: TxiosRequestConfig = {
       return transformResponse(data)
     },
   ],
+
+  validateStatus(status: number): boolean {
+    return status >= 200 && status < 300
+  },
 }
 
 const methodNoData: string[] = ['get', 'head', 'delete', 'options']

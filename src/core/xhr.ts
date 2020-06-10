@@ -26,6 +26,7 @@ export default function xhr(config: TxiosRequestConfig): TxiosPromise {
       onUploadProgress,
       onDownloadProgress,
       auth,
+      validateStatus,
     } = config
     // 1. 创建 XHR 实例(每一个请求都会创建一个 XHR 实例)
     const request = new XMLHttpRequest()
@@ -148,9 +149,11 @@ export default function xhr(config: TxiosRequestConfig): TxiosPromise {
       }
     }
 
-    // 默认的 response 处理方法，当且仅当状态码在 [200， 300) 之间才会正确返回数据，否则返回 TxiosError
+    // 当存在 validateStatus 时对状态码进行校验
+    // validateStatus 默认校验区间 [200, 300) 的状态码
+    // 当用户将 validateStatus 只为 false 值(如 null / undefined 等)时则不进行校验
     function handleResponse(response: TxiosResponse): void {
-      if (response.status >= 200 && response.status < 300) {
+      if (!response.status || !validateStatus || validateStatus(response.status)) {
         resolve(response)
       } else {
         reject(
