@@ -11,7 +11,7 @@ export interface Txios {
     response: InterceptorManager<TxiosResponse>
   }
 
-  request<T = any>(config: TxiosRequestConfig): TxiosResponse<T>
+  request<T = any>(config: TxiosRequestConfig): TxiosPromise<T>
 
   get<T = any>(url: string, config?: TxiosRequestConfig): TxiosPromise<T>
   head<T = any>(url: string, config?: TxiosRequestConfig): TxiosPromise<T>
@@ -21,11 +21,17 @@ export interface Txios {
   put<T = any>(url: string, data?: any, config?: TxiosRequestConfig): TxiosPromise<T>
   post<T = any>(url: string, data?: any, config?: TxiosRequestConfig): TxiosPromise<T>
   patch<T = any>(url: string, data?: any, config?: TxiosRequestConfig): TxiosPromise<T>
+
+  getUri(config?: TxiosRequestConfig): string
 }
 
 export interface TxiosInstance extends Txios {
   <T = any>(config: TxiosRequestConfig): TxiosPromise<T>
   <T = any>(url: string, config?: TxiosRequestConfig): TxiosPromise<T>
+}
+
+export interface TxiosClassStatic {
+  new (config: TxiosRequestConfig): Txios
 }
 
 export interface TxiosStatic extends TxiosInstance {
@@ -34,6 +40,10 @@ export interface TxiosStatic extends TxiosInstance {
   CancelToken: CancelTokenStatic
   Cancel: CancelStatic
   isCancel: (value: any) => boolean
+
+  all<T>(promises: Array<T | Promise<T>>): Promise<Array<T>>
+  spread<T, R>(callback: (...args: T[]) => R): (arr: T[]) => R
+  Txios: TxiosClassStatic
 }
 
 export interface TxiosRequestConfig {

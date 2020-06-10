@@ -25,7 +25,7 @@ function processConfig(config: TxiosRequestConfig): void {
 }
 
 // 处理 URL，主要是将 params 序列化为字符串并添加到 URL 上
-function transformURL(config: TxiosRequestConfig): string {
+export function transformURL(config: TxiosRequestConfig): string {
   const { params, paramsSerializer, baseURL } = config
   let url = config.url
   if (baseURL && !isAbsoluteURL(url!)) {
