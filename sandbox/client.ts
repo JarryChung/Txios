@@ -11,7 +11,8 @@ const map = {
   config_post: configPost,
   cancel_get: cancelGet,
   auth_post: authPost,
-  validate_status_get: validateStatusGet
+  validate_status_get: validateStatusGet,
+  params_serializer_get: paramsSerializerGet
 }
 
 Object.keys(map).forEach(el => {
@@ -237,5 +238,23 @@ function validateStatusGet () {
     console.log(res)
   }).catch((e: TxiosError) => {
     console.log(e.message)
+  })
+}
+
+function paramsSerializerGet () {
+  const instance = txios.create({
+    paramsSerializer(params) {
+      return qs.stringify(params, { arrayFormat: 'brackets' }) + '&111=222'
+    }
+  })
+
+  instance.get('/params_serializer_get', {
+    params: {
+      name: 'Jarry Chung',
+      habit: 'coding',
+      look: ['x', 'y']
+    }
+  }).then(res => {
+    console.log(res)
   })
 }

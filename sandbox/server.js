@@ -42,6 +42,8 @@ app.use(route.get('/cancel_get', cancelGet))
 app.use(route.post('/progress_upload_post', progressUploadPost))
 app.use(route.post('/auth_post', authPost))
 app.use(route.get('/validate_status_get', validateStatusGet))
+app.use(route.get('/params_serializer_get', paramsSerializerGet))
+
 
 const port = process.env.PORT || 8899
 app.listen(port)
@@ -118,4 +120,8 @@ function authPost (ctx) {
 
 function validateStatusGet(ctx) {
   ctx.status = 304
+}
+
+function paramsSerializerGet (ctx) {
+  ctx.response.body = { msg: 'get api' }
 }
