@@ -13,7 +13,8 @@ const map = {
   auth_post: authPost,
   validate_status_get: validateStatusGet,
   params_serializer_get: paramsSerializerGet,
-  baseurl_get: baseURLGet
+  baseurl_get: baseURLGet,
+  get_uri: getUri
 }
 
 Object.keys(map).forEach(el => {
@@ -266,4 +267,16 @@ function baseURLGet () {
   })
   instance.get('wiki/5e7ae7af09c9e23014400452.jpg')
   instance.get('http://img.mukewang.com/wiki/5e78e84e0933b99d32762054.jpg')
+}
+
+function getUri () {
+  const fakeConfig = {
+    baseURL: 'https://www.jarrychung.com/',
+    url: '/jarry/chung',
+    params: {
+      name: 1,
+      idid: 2,
+    }
+  }
+  console.log(txios.getUri(fakeConfig))
 }
