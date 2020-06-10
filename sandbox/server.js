@@ -38,6 +38,8 @@ app.use(route.post('/config_post', configPost))
 
 app.use(route.get('/cancel_get', cancelGet))
 
+app.use(route.post('/progress_upload_post', progressUploadPost))
+
 const port = process.env.PORT || 8899
 app.listen(port)
 
@@ -92,4 +94,9 @@ async function cancelGet (ctx) {
       resolve()
     }, 1000)
   })
+}
+
+function progressUploadPost (ctx) {
+  // 补充后台处理上传文件逻辑
+  ctx.response.body = { result: 'upload sucess!' }
 }

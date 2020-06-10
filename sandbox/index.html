@@ -102,6 +102,14 @@
       <p class="intro">测试取消请求</p>
       <p class="content">这里会发起 3 个请求，第 1 个请求将在 100ms 后被取消，第 2 个请求使用了与第 1 个请求相同的 token，该请求在发出去前就被取消了。第 3 个请求将在 1500ms 时进行取消，但此时该请求已经成功返回，因此取消无效</p>
     </div>
+
+    <div class="box">
+      <button id="progress_upload_post" class="btn">在下面选择文件，点此测试上传进度</button>
+      <button id="progress_download_get" class="btn">测试下载进度</button>
+      <input id="progress_upload_file" type="file"/>
+      <p class="intro">打开控制台，查看效果</p>
+      <p class="content">打开 console 查看上传与下载的进度</p>
+    </div>
   </div>
 
   <script src="/__build__/client.js"></script>

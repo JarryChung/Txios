@@ -175,3 +175,26 @@ function cancelGet () {
     cancel()
   }, 1500)
 }
+
+// 上传与下载
+const progressInstance = txios.create()
+const update = (e: ProgressEvent) => { console.log(`progress: ${e.loaded}/${e.total}`) }
+progressInstance.defaults.onDownloadProgress = update
+progressInstance.defaults.onUploadProgress = update
+
+const uploadFile = () => {
+  const data = new FormData()
+  const fileEl = document.getElementById('progress_upload_file') as HTMLInputElement
+  if (fileEl.files) {
+    data.append('file', fileEl.files[0])
+    progressInstance.post('/progress_upload_post', data)
+  }
+}
+const uploadEl = document.getElementById('progress_upload_post')
+uploadEl!.addEventListener('click', uploadFile)
+
+const getImg = () => {
+  progressInstance.get('http://5b0988e595225.cdn.sohucs.com/images/20181006/126c54653b60423298fb30cba80e9165.jpeg')
+}
+const downloadEl = document.getElementById('progress_download_get')
+downloadEl!.addEventListener('click', getImg)
