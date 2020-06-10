@@ -57,6 +57,8 @@ export interface TxiosRequestConfig {
   auth?: TxiosAuthorization
   validateStatus?: (status: number) => boolean
 
+  paramsSerializer?: (params: any) => string
+
   onUploadProgress?: (e: ProgressEvent) => void
   onDownloadProgress?: (e: ProgressEvent) => void
 

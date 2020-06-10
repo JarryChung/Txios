@@ -2,7 +2,7 @@
  * url 处理相关方法
  */
 
-import { isDate, isPlainObject } from '../utils'
+import { isDate, isPlainObject, isURLSearchParams } from '../utils'
 
 interface URLOrigin {
   protocol: string
@@ -43,41 +43,55 @@ function resolveURL(url: string): URLOrigin {
  * @param url URL
  * @param params params 选项
  */
-export function buildURL(url: string, params?: any): string {
+export function buildURL(
+  url: string,
+  params?: any,
+  paramsSerializer?: (params: any) => string
+): string {
   if (!params) {
     return url
   }
 
-  const parts: string[] = []
-  Object.keys(params).forEach((key) => {
-    const val = params[key]
+  let serializedParams = undefined
+  // 若传递了参数序列化方法，则使用该方法进行序列化
+  // 否则判断是否为 URLSearchParams 实例，若是则返回该实例的字符串
+  // 否则使用默认的参数序列化方法
+  if (paramsSerializer) {
+    serializedParams = paramsSerializer(params)
+  } else if (isURLSearchParams(params)) {
+    serializedParams = params.toString()
+  } else {
+    const parts: string[] = []
+    Object.keys(params).forEach((key) => {
+      const val = params[key]
 
-    if (val === null || typeof val === 'undefined') {
-      return
-    }
-
-    // 将 val 格式化为数组
-    let values: any = []
-    if (Array.isArray(val)) {
-      values = val
-      // 如果 val 为数组，则 key 末尾需要添加 []
-      // 如：{ a: [1, 2] } 转化为 a[]=1&a[]=2
-      key += '[]'
-    } else {
-      values = [val]
-    }
-
-    values.forEach((v: any) => {
-      if (isDate(v)) {
-        v = v.toISOString()
-      } else if (isPlainObject(v)) {
-        v = JSON.stringify(v)
+      if (val === null || typeof val === 'undefined') {
+        return
       }
-      parts.push(`${encode(key)}=${encode(v)}`)
-    })
-  })
 
-  let serializedParams = parts.join('&')
+      // 将 val 格式化为数组
+      let values: any = []
+      if (Array.isArray(val)) {
+        values = val
+        // 如果 val 为数组，则 key 末尾需要添加 []
+        // 如：{ a: [1, 2] } 转化为 a[]=1&a[]=2
+        key += '[]'
+      } else {
+        values = [val]
+      }
+
+      values.forEach((v: any) => {
+        if (isDate(v)) {
+          v = v.toISOString()
+        } else if (isPlainObject(v)) {
+          v = JSON.stringify(v)
+        }
+        parts.push(`${encode(key)}=${encode(v)}`)
+      })
+    })
+
+    serializedParams = parts.join('&')
+  }
 
   if (serializedParams) {
     // 哈希符号(#)只在浏览器端起作用
