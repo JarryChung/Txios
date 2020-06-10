@@ -116,6 +116,12 @@
       <p class="intro">测试 HTTP 授权</p>
       <p class="content">将会发出两个请求，一个验证成功，一个验证失败，可在控制台查看效果</p>
     </div>
+
+    <div class="box">
+      <button id="validate_status_get" class="btn">打开控制台,点击这里查看效果</button>
+      <p class="intro">测试自定义状态码校验</p>
+      <p class="content">分别使用默认(区间 [200, 300) )、自定义(区间 [200, 400) ])来处理返回值，后端均返回 304，使用自定义状态码校验的请求将成功</p>
+    </div>
   </div>
 
   <script src="/__build__/client.js"></script>

@@ -40,8 +40,8 @@ app.use(route.post('/config_post', configPost))
 app.use(route.get('/cancel_get', cancelGet))
 
 app.use(route.post('/progress_upload_post', progressUploadPost))
-
 app.use(route.post('/auth_post', authPost))
+app.use(route.get('/validate_status_get', validateStatusGet))
 
 const port = process.env.PORT || 8899
 app.listen(port)
@@ -114,4 +114,8 @@ function authPost (ctx) {
     ctx.status = 401
     ctx.response.body = 'UnAuthorization'
   }
+}
+
+function validateStatusGet(ctx) {
+  ctx.status = 304
 }

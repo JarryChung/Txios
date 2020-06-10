@@ -1,4 +1,4 @@
-import txios, { TxiosTransformer, Canceler } from '../src/index'
+import txios, { TxiosTransformer, Canceler, TxiosError } from '../src/index'
 import qs from 'qs'
 
 const map = {
@@ -10,7 +10,8 @@ const map = {
   interceptor_post: interceptorPost,
   config_post: configPost,
   cancel_get: cancelGet,
-  auth_post: authPost
+  auth_post: authPost,
+  validate_status_get: validateStatusGet
 }
 
 Object.keys(map).forEach(el => {
@@ -218,5 +219,23 @@ function authPost () {
     }
   }).then(res => {
     console.log('auth fail: ', res)
+  })
+}
+
+function validateStatusGet () {
+  txios.get('/validate_status_get').then(res => {
+    console.log(res)
+  }).catch((e: TxiosError) => {
+    console.log(e.message)
+  })
+
+  txios.get('/validate_status_get', {
+    validateStatus(status) {
+      return status >= 200 && status < 400
+    }
+  }).then(res => {
+    console.log(res)
+  }).catch((e: TxiosError) => {
+    console.log(e.message)
   })
 }
