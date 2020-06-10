@@ -5,9 +5,8 @@
  */
 
 import { TxiosRequestConfig, TxiosPromise, TxiosResponse } from '../types'
-import { buildURL } from '../helpers/url'
-import { parseRequestHeaders, flattenHeaders } from '../helpers/headers'
-import { transformRequest, transformResponse } from '../helpers/data'
+import { buildURL, isAbsoluteURL, combineURL } from '../helpers/url'
+import { flattenHeaders } from '../helpers/headers'
 import xhr from './xhr'
 import transform from './transform'
 
@@ -27,7 +26,11 @@ function processConfig(config: TxiosRequestConfig): void {
 
 // 处理 URL，主要是将 params 序列化为字符串并添加到 URL 上
 function transformURL(config: TxiosRequestConfig): string {
-  const { url, params, paramsSerializer } = config
+  const { params, paramsSerializer, baseURL } = config
+  let url = config.url
+  if (baseURL && !isAbsoluteURL(url!)) {
+    url = combineURL(baseURL, url)
+  }
   return buildURL(url!, params, paramsSerializer)
 }
 

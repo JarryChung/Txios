@@ -115,3 +115,22 @@ export function isURLSameOrigin(url: string): boolean {
   const parsed = resolveURL(url)
   return parsed.host === originURL.host && parsed.protocol === originURL.protocol
 }
+
+/**
+ * 判断是否为绝对路径
+ * 如果URL以 "<scheme>://" 或 "//" (协议相对URL)开头，则被认为是绝对URL
+ * RFC 3986将 scheme 定义为以字母开头的字符序列，然后是字母，数字，加号，句点或连字符的任意组合
+ * @param url URL
+ */
+export function isAbsoluteURL(url: string): boolean {
+  return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url)
+}
+
+/**
+ * 连接绝对路径与相对路径，并自动去除多余的斜杠
+ * @param baseURL 绝对路径
+ * @param relativeURL 相对路径
+ */
+export function combineURL(baseURL: string, relativeURL?: string): string {
+  return relativeURL ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '') : baseURL
+}

@@ -44,6 +44,7 @@ export interface TxiosRequestConfig {
   params?: any
   headers?: any
   responsetype?: XMLHttpRequestResponseType
+  baseURL?: string
 
   transformRequest?: TxiosTransformer | TxiosTransformer[]
   transformResponse?: TxiosTransformer | TxiosTransformer[]
