@@ -54,6 +54,8 @@ export interface TxiosRequestConfig {
   xsrfCookieName?: string
   xsrfHeaderName?: string
 
+  auth?: TxiosAuthorization
+
   onUploadProgress?: (e: ProgressEvent) => void
   onDownloadProgress?: (e: ProgressEvent) => void
 
@@ -139,4 +141,9 @@ export interface Cancel {
 // Cancel 类类型的接口定义
 export interface CancelStatic {
   new (message?: string): Cancel
+}
+
+export interface TxiosAuthorization {
+  username: string
+  password: string
 }

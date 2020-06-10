@@ -25,6 +25,7 @@ export default function xhr(config: TxiosRequestConfig): TxiosPromise {
       xsrfCookieName,
       onUploadProgress,
       onDownloadProgress,
+      auth,
     } = config
     // 1. 创建 XHR 实例(每一个请求都会创建一个 XHR 实例)
     const request = new XMLHttpRequest()
@@ -115,6 +116,12 @@ export default function xhr(config: TxiosRequestConfig): TxiosPromise {
         if (value && xsrfHeaderName) {
           headers[xsrfHeaderName] = value
         }
+      }
+
+      if (auth) {
+        // Authorization 的定义参考
+        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
+        headers['Authorization'] = `Basic ${btoa(`${auth.username}:${auth.password}`)}`
       }
 
       // 设置请求头

@@ -51,7 +51,7 @@ valueFromConfig2Keys.forEach((key) => {
 })
 
 // headers 需要进行深度合并
-const mergeDeepPropertiesKeys = ['headers']
+const mergeDeepPropertiesKeys = ['headers', 'auth']
 mergeDeepPropertiesKeys.forEach((key) => {
   strategies[key] = mergeDeepValues
 })
